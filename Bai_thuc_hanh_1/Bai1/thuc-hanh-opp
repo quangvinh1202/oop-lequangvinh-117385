@@ -1,0 +1,422 @@
+#include<iostream>
+#include<string>
+#include<cctype>
+using namespace std;
+class Xe{
+private:
+int maxe;
+string loaixe;
+int giovao;
+int thoigiando;
+double phidoxe;
+bool dangchiemcho;
+public:
+Xe(){
+maxe=0;
+loaixe="Bicycle";
+giovao=0;
+thoigiando=1;
+phidoxe=0;
+dangchiemcho=false;
+}
+Xe(int ma,const string& loai,int gio,int thoiluong){
+maxe=ma;
+loaixe= chuanhoaloaixe(loai);
+giovao=gio;
+thoigiando=thoiluong;
+phidoxe=0;
+dangchiemcho=true;
+tinhphidoxe();
+}
+int laymaxe() const {
+return maxe;
+}
+string layloaixe() const{
+return loaixe;
+}
+int laygiovao() const{
+return giovao;
+}
+int laythoigiando() const{
+return thoigiando;
+}
+double layphidoxe() const{
+return phidoxe;
+}
+bool laydangchiemcho() const{
+return dangchiemcho;
+}
+void ganmaxe(int ma){
+maxe=ma;
+}
+void ganloaixe(const string& loai){
+if(laloaixehople(loai)) loaixe=chuanhoaloaixe(loai);
+}
+void gangiovao(int gio){
+if(gio>=0&&gio<=23) giovao=gio;
+}
+void ganthoiluongdo(int thoiluong){
+if(thoiluong>=1&&thoiluong<=23) thoigiando=thoiluong;
+}
+void ganphidoxe(double phi){
+phidoxe=phi;
+}
+void gandangchiemcho(bool trangthai){
+dangchiemcho= trangthai;
+}
+static string chuanhoaloaixe(const string& loai){
+string s=loai;
+for(int i=0;i<(int)s.length();i++) s[i]=tolower((unsigned char)s[i]);
+if(s=="car") return "Car";
+if(s=="motorcycle") return "Motorcycle";
+if(s=="bicycle") return "Bicycle";
+return "";
+}
+static bool laloaixehople(const string& loai){
+return chuanhoaloaixe(loai) !="";
+}
+void tinhphidoxe(){
+double dongia=0;
+if(loaixe=="Car") dongia=6;
+if(loaixe=="Motorcycle") dongia=4;
+if(loaixe=="Bicycle") dongia=2;
+phidoxe=0;
+for(int i=0;i<thoigiando;i++){
+int gio=(giovao+i)%24;
+if(i<2){
+if((gio>=6&&gio<10)||(gio>=15&&gio<19)) phidoxe += dongia*1.3;
+else phidoxe +=dongia*0.95;
+}
+else{
+phidoxe +=dongia*0.9;
+}
+}
+}
+void hienthi() const{
+cout<<"Ma xe: "<<maxe<<endl;
+cout<<"Loai xe: "<<loaixe<<endl;
+cout<<"Gio vao: "<<giovao<<endl;
+cout<<"Thoi gian do: "<<thoigiando<<endl;
+cout<<"Phi do xe: "<<phidoxe<<endl;
+}
+};
+class Baidoxe{
+private:
+int mabai;
+char kichthuoc;
+Xe xe1,xe2,xe3;
+bool coxe1,coxe2,coxe3;
+public:
+Baidoxe(){
+mabai=0;
+kichthuoc='S';
+coxe1=coxe2=coxe3=false;
+}
+Baidoxe(int ma,char size){
+mabai=ma;
+kichthuoc=size;
+coxe1=coxe2=coxe3=false;
+}
+int laymabai() const{
+return mabai;
+}
+char laykichthuoc() const{
+return kichthuoc;
+}
+int succhua() const{
+if(kichthuoc =='S') return 1;
+if(kichthuoc =='M') return 2;
+return 3;
+}
+int soluongxe() const{
+return coxe1+coxe2+coxe3;
+}
+bool comaxe(int ma) const{
+if(coxe1&&xe1.laymaxe()==ma) return true;
+if(coxe2&&xe2.laymaxe()==ma) return true;
+if(coxe3&&xe3.laymaxe()==ma) return true;
+return false;
+}
+bool themxe(const Xe& xe){
+if(!coxe1){
+xe1=xe;
+coxe1=true;
+return true;
+}
+if(succhua()>=2&&!coxe2){
+xe2=xe;
+coxe2=true;
+return true;
+}
+if(succhua()>=3&&!coxe3){
+xe3=xe;
+coxe3=true;
+return true;
+}
+return false;
+}
+bool xoaxe(int ma){
+if(coxe1&&xe1.laymaxe()==ma){
+coxe1=false;
+return true;
+}
+if(coxe2&&xe2.laymaxe()==ma){
+coxe2=false;
+return true;
+}
+if(coxe3&&xe3.laymaxe()==ma){
+coxe3=false;
+return true;
+}
+return false;
+}
+void hienthithongtinbai() const{
+cout<<"Ma bai: "<<mabai<<endl;
+cout<<"Kich thuoc: "<<kichthuoc<<endl;
+cout<<"So xe: "<<soluongxe()<<"/"<<succhua()<<endl;
+}
+void hienthixe() const{
+hienthithongtinbai();
+if(coxe1) xe1.hienthi();
+if(coxe2) xe2.hienthi();
+if(coxe3) xe3.hienthi();
+}
+void lietketheoloai(const string& loai) const{
+if(coxe1&&xe1.layloaixe()==loai) xe1.hienthi();
+if(coxe2&&xe2.layloaixe()==loai) xe2.hienthi();
+if(coxe3&&xe3.layloaixe()==loai) xe3.hienthi();
+}
+double tongphi(const string& loai) const{
+double tong=0;
+if(coxe1&&xe1.layloaixe()==loai) tong +=xe1.layphidoxe();
+if(coxe2&&xe2.layloaixe()==loai) tong +=xe2.layphidoxe();
+if(coxe3&&xe3.layloaixe()==loai) tong +=xe3.layphidoxe();
+return tong;
+}
+int demloai(const string& loai) const{
+int dem=0;
+if(coxe1&&xe1.layloaixe()==loai) dem++;
+if(coxe2&&xe2.layloaixe()==loai) dem++;
+if(coxe3&&xe3.layloaixe()==loai) dem++;
+return dem;
+}
+};
+class Hethong{
+private:
+Baidoxe bai1,bai2,bai3;
+bool cobai1,cobai2,cobai3;
+public:
+Hethong(){
+cobai1=cobai2=cobai3=false;
+}
+bool trungmabai(int ma){
+return (cobai1&&bai1.laymabai()==ma)||(cobai2&&bai2.laymabai()==ma)||(cobai3&&bai3.laymabai()==ma);
+}
+bool trungmaxe(int ma){
+return (cobai1&&bai1.comaxe(ma))||(cobai2&&bai2.comaxe(ma))||(cobai3&&bai3.comaxe(ma));
+}
+void taobai(){
+int ma;
+char size;
+cout<<"Nhap ma bai: ";
+cin>>ma;
+cout<<"Nhap kich thuoc (S/M/L): ";
+cin>>size;
+size=toupper((unsigned char)size);
+if(size!='S'&&size!='M'&&size!='L'){
+cout<<"Kich thuoc khong hop le\n";
+return;
+}
+if(trungmabai(ma)){
+cout<<"Ma bai da ton tai\n";
+return;
+}
+Baidoxe bai(ma,size);
+if(!cobai1){
+bai1=bai;
+cobai1=true;
+}
+else if(!cobai2){
+bai2=bai;
+cobai2=true;
+}
+else if(!cobai3){
+bai3=bai;
+cobai3=true;
+}
+else{
+cout<<"Da du 3 bai do xe\n";
+return;
+}
+cout<<"Tao bai thanh cong\n";
+}
+void themxe(){
+int ma,gio,thoiluong;
+string loai;
+cout<<"Nhap ma xe: ";
+cin>>ma;
+if(trungmaxe(ma)){
+cout<<"Ma xe da ton tai\n";
+return;
+}
+cout<<"Nhap loai xe(Car/Motorcycle/Bicycle): ";
+cin>>loai;
+if(!Xe::laloaixehople(loai)){
+cout<<"Loai xe ko hop le\n";
+return;
+}
+cout<<"Nhap gio vao(0-23): ";
+cin>>gio;
+cout<<"Nhap gio gian do(1-23): ";
+cin>>thoiluong;
+if(gio<0||gio>23||thoiluong<1||thoiluong>23){
+cout<<"Thoi gian khong hop le\n";
+return;
+}
+Xe xe(ma,loai,gio,thoiluong);
+if(cobai1&&bai1.themxe(xe)){
+cout<<"Them vao bai"<<bai1.laymabai()<<endl;
+}
+else if(cobai2&&bai2.themxe(xe)){
+cout<<"Them vao bai"<<bai2.laymabai()<<endl;
+}
+else if(cobai3&&bai3.themxe(xe)){
+cout<<"Them vao bai"<<bai3.laymabai()<<endl;
+}
+else{
+cout<<"Khong con cho trong\n";
+}
+}
+void xoabai(){
+int ma;
+cout<<"Nhap ma bai can xoa: ";
+cin>>ma;
+if(cobai1&&bai1.laymabai()==ma){
+cobai1=false;
+}
+else if(cobai2&&bai2.laymabai()==ma){
+cobai2=false;
+}
+else if(cobai3&&bai3.laymabai()==ma){
+cobai3=false;
+}
+else{
+cout<<"Khong tim thay bai\n";
+return;
+}
+cout<<"Xoa bai thanh cong\n";
+}
+void layxe(){
+int ma;
+cout<<"Nhap ma xe can lay: ";
+cin>>ma;
+if((cobai1&&bai1.xoaxe(ma))||(cobai2&&bai2.xoaxe(ma))||(cobai3&&bai3.xoaxe(ma))){
+cout<<"Lay xe thanh cong\n";
+}
+else{
+cout<<"Khong tim thay xe\n";
+}
+}
+void hienthitatca(){
+if(cobai1) bai1.hienthithongtinbai();
+if(cobai2) bai2.hienthithongtinbai();
+if(cobai3) bai3.hienthithongtinbai();
+}
+void hienthitheobai(){
+int ma;
+cout<<"Nhap ma bai: ";
+cin>>ma;
+if(cobai1&&bai1.laymabai()==ma) bai1.hienthixe();
+else if(cobai2&&bai2.laymabai()==ma) bai2.hienthixe();
+else if(cobai3&&bai3.laymabai()==ma) bai3.hienthixe();
+else cout<<"Khong tim thay bai\n";
+}
+void lietketheoloai(){
+string loai;
+cout<<"Nhap loai xe: ";
+cin>>loai;
+loai=Xe::chuanhoaloaixe(loai);
+if(loai==""){
+cout<<"Loai xe khong hop le\n";
+return;
+}
+if(cobai1) bai1.lietketheoloai(loai);
+if(cobai2) bai2.lietketheoloai(loai);
+if(cobai3) bai3.lietketheoloai(loai);
+}
+void thongke(){
+string loai;
+double tong;
+int dem;
+for(int i=1;i<=3;i++){
+if(i==1) loai="Car";
+if(i==2) loai="Motorcycle";
+if(i==3) loai="Bicycle";
+tong=0;
+dem=0;
+if(cobai1){
+tong+=bai1.tongphi(loai);
+dem+=bai1.demloai(loai);
+}
+if(cobai2){
+tong+=bai2.tongphi(loai);
+dem+=bai2.demloai(loai);
+}
+if(cobai3){
+tong+=bai3.tongphi(loai);
+dem+=bai3.demloai(loai);
+}
+cout<<"Loai xe: "<<loai<<endl;
+cout<<"So luong: "<<dem<<endl;
+cout<<"Phi trung binh: ";
+if(dem>0) cout<<tong/dem<<endl;
+else cout<<0<<endl;
+}
+if(cobai1){
+cout<<"Bai "<<bai1.laymabai()<<endl;
+cout<<"Tong phi: "<<bai1.tongphi("Car")+bai1.tongphi("Motorcycle")+bai1.tongphi("Bicycle")<<endl;
+}
+if(cobai2){
+cout<<"Bai "<<bai2.laymabai()<<endl;
+cout<<"Tong phi: "<<bai2.tongphi("Car")+bai2.tongphi("Motorcycle")+bai2.tongphi("Bicycle")<<endl;
+}
+if(cobai3){
+cout<<"Bai "<<bai3.laymabai()<<endl;
+cout<<"Tong phi: "<<bai3.tongphi("Car")+bai3.tongphi("Motorcycle")+bai3.tongphi("Bicycle")<<endl;
+}
+}
+void runmenu(){
+int chon;
+do{
+cout<<"\n====QUAN LY BAI DO XE====\n";
+cout<<"1.Tao bai do xe\n";
+cout<<"2.Them xe vao bai\n";
+cout<<"3.Xoa bai do xe\n";
+cout<<"4.Lay xe ra khoi bai\n";
+cout<<"5.Hien thi tat ca bai\n";
+cout<<"6.Hien thi xe theo bai\n";
+cout<<"7.Liet ke xe theo loai\n";
+cout<<"8.Thong ke phi do xe\n";
+cout<<"9.Thoat\n";
+cout<<"Nhap lua chon: ";
+cin>>chon;
+switch(chon){
+case 1:taobai(); break;
+case 2:themxe(); break;
+case 3:xoabai(); break;
+case 4:layxe(); break;
+case 5:hienthitatca(); break;
+case 6:hienthitheobai(); break;
+case 7:lietketheoloai(); break;
+case 8:thongke(); break;
+case 9:cout<<"Ket thuc\n"; break;
+default: cout<<"Lua chon khong hop le\n";
+}
+} while(chon!=9);
+}
+};
+int main(){
+Hethong ht;
+ht.runmenu();
+return 0;
+}
